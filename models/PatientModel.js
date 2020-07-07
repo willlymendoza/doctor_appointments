@@ -18,7 +18,7 @@ const patientSchema = new Schema({
     type: String,
     minlength: 5,
     maxlength: 55,
-    required,
+    required: true,
   },
   phone_number: {
     type: String,
