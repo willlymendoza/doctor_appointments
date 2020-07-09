@@ -14,25 +14,25 @@ const appointmentSchema = new Schema({
   },
   observations: {
     type: String,
-    minlength: 5,
     maxlength: 250,
+    default: "",
   },
   prescription: {
     type: String,
-    minlength: 5,
     maxlength: 250,
+    default: "",
   },
-  patiend_id: {
+  patient: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "patient",
   },
-  doctor_id: {
+  doctor: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "user",
   },
-  created_by_id: {
+  created_by: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "user",
