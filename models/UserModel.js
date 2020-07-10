@@ -6,25 +6,30 @@ const userSchema = new Schema({
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 45,
+    maxlength: 55,
   },
   last_name: {
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 45,
+    maxlength: 55,
   },
   phone_number: {
     type: String,
     required: true,
     minlength: 8,
-    maxlength: 15,
+    maxlength: 25,
+  },
+  email: {
+    type: String,
+    minlength: 8,
+    maxlength: 25,
   },
   address: {
     type: String,
     required: true,
     minlength: 5,
-    maxlength: 25,
+    maxlength: 60,
   },
   is_doctor: {
     type: Boolean,
@@ -36,7 +41,7 @@ const userSchema = new Schema({
     minlength: 20,
     maxlength: 150,
   },
-  created_by_id: {
+  created_by: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: "user",
