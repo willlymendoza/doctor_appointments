@@ -6,11 +6,13 @@ const app = express();
 const patients = require("./routes/patientsController");
 const users = require("./routes/usersController");
 const appointments = require("./routes/appointmentsController");
+const auth = require("./routes/authController");
 
 app.use(express.json());
 app.use("/api/patients/", patients);
 app.use("/api/users/", users);
 app.use("/api/appointments/", appointments);
+app.use("/api/auth/", auth);
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
