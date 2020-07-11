@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
@@ -56,6 +57,19 @@ const userSchema = new Schema({
     required: true,
   },
 });
+
+userSchema.methods.generateJWT = function () {
+  return jwt.sign(
+    {
+      _id: this._id,
+      name: this.name,
+      last_name: this.last_name,
+      email: this.email,
+      is_doctor: this.is_doctor,
+    },
+    "yuyujuju"
+  );
+};
 
 const User = mongoose.model("user", userSchema);
 
