@@ -1,3 +1,4 @@
+const auth = require("../middlewares/authMiddleware");
 const bcrypt = require("bcrypt");
 const express = require("express");
 const { Types } = require("mongoose");
@@ -6,7 +7,7 @@ const router = express.Router();
 const { body, validationResult } = require("express-validator");
 
 /* GETTING LIST OF USERS */
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const users = await User.find().populate("created_by");
 
   if (!users.length) return res.status(404).send("Users not found");
