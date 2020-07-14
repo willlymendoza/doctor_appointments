@@ -7,7 +7,7 @@ function auth(req, res, next) {
     return res.status(401).send("Access denied, valid token needed");
 
   try {
-    const payload = jwt.verify(jwtToken, "yuyujuju");
+    const payload = jwt.verify(jwtToken, process.env.TOKEN_KEY);
     req.user = payload;
 
     next();

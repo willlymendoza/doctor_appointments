@@ -67,7 +67,7 @@ userSchema.methods.generateJWT = function () {
       email: this.email,
       is_doctor: this.is_doctor,
     },
-    process.env.TOKEN_SECRET_KEY
+    process.env.TOKEN_KEY
   );
 };
 
