@@ -3,8 +3,11 @@ const bcrypt = require("bcrypt");
 const express = require("express");
 const { Types } = require("mongoose");
 const User = require("../models/UserModel");
+const {
+  registerValidation,
+  updateValidation,
+} = require("../validations/userValidations");
 const router = express.Router();
-const { body, validationResult } = require("express-validator");
 
 /* GETTING LIST OF USERS */
 router.get("/", auth, async (req, res) => {
@@ -32,91 +35,75 @@ router.get("/:id", async (req, res) => {
 });
 
 /* CREATING A NEW USER */
-router.post(
-  "/",
-  [
-    body("name").trim().isLength({ min: 5, max: 55 }),
-    body("last_name").trim().isLength({ min: 5, max: 55 }),
-    body("phone_number").trim().isLength({ min: 8, max: 25 }),
-    body("email").trim().isEmail(),
-    body("address").trim().isLength({ min: 5, max: 60 }),
-    body("is_doctor").trim().isBoolean(),
-    body("password").trim().isLength({ min: 8, max: 25 }),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
+router.post("/", async (req, res) => {
+  /* Checking if the user is already in the DB */
+  const emailExist = await User.findOne({
+    email: req.body.email,
+  });
+  if (emailExist) return res.status(400).send("Email already exists");
 
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
-    }
+  /* Validation data */
+  const { error } = registerValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
 
-    const user = new User();
-    const data = req.body;
+  /* Hashing password */
+  const salt = await bcrypt.genSalt(10);
+  const hashPassword = await bcrypt.hash(req.body.password, salt);
 
-    const salt = await bcrypt.genSalt(10);
-    const hashPassword = await bcrypt.hash(req.body.password, salt);
+  const data = req.body;
 
-    user.name = data.name;
-    user.last_name = data.last_name;
-    user.phone_number = data.phone_number;
-    user.email = data.email;
-    user.address = data.address;
-    user.is_doctor = data.is_doctor;
-    user.password = hashPassword;
-    user.created_by = "5f0667fb5aa2b45df4dfaeca";
-    user.updated_at = Date.now();
+  const user = new User({
+    name: data.name,
+    last_name: data.last_name,
+    phone_number: data.phone_number,
+    email: data.email,
+    address: data.address,
+    is_doctor: data.is_doctor,
+    password: hashPassword,
+    created_by: "5f0667fb5aa2b45df4dfaeca",
+    updated_at: Date.now(),
+  });
 
-    await user.save();
-
-    res.status(201).send(user);
+  try {
+    const savedUser = await user.save();
+    res.send(user);
+  } catch (error) {
+    res.status(400).send(error);
   }
-);
+});
 
 /* UPDATING A USER */
-router.put(
-  "/:id",
-  [
-    body("name").trim().isLength({ min: 5, max: 55 }),
-    body("last_name").trim().isLength({ min: 5, max: 55 }),
-    body("phone_number").trim().isLength({ min: 8, max: 25 }),
-    body("email").trim().isEmail(),
-    body("address").trim().isLength({ min: 5, max: 60 }),
-    body("is_doctor").trim().isBoolean(),
-  ],
-  async (req, res) => {
-    const errors = validationResult(req);
+router.put("/:id", async (req, res) => {
+  const validId = Types.ObjectId.isValid(req.params.id);
+  if (!validId) return res.status(400).send("The ID param is invalid");
 
-    if (!errors.isEmpty()) {
-      return res.status(422).json({ errors: errors.array() });
+  /* Validation data */
+  const { error } = updateValidation(req.body);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  const data = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    {
+      name: data.name,
+      last_name: data.last_name,
+      phone_number: data.phone_number,
+      email: data.email,
+      address: data.address,
+      is_doctor: data.is_doctor,
+      updated_at: Date.now(),
+    },
+    {
+      new: true,
     }
+  );
 
-    const data = req.body;
-
-    const validId = Types.ObjectId.isValid(req.params.id);
-    if (!validId) return res.status(400).send("The ID param is invalid");
-
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      {
-        name: data.name,
-        last_name: data.last_name,
-        phone_number: data.phone_number,
-        email: data.email,
-        address: data.address,
-        is_doctor: data.is_doctor,
-        updated_at: Date.now(),
-      },
-      {
-        new: true,
-      }
-    );
-
-    if (!user) {
-      return res.status(404).send(`This user doesn't exist`);
-    }
-
-    res.status(200).send(user);
+  if (!user) {
+    return res.status(404).send(`This user doesn't exist`);
   }
-);
+
+  res.status(200).send(user);
+});
 
 module.exports = router;
