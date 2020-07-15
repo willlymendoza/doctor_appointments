@@ -19,7 +19,7 @@ router.get("/", auth, async (req, res) => {
 });
 
 /* GETTING A USER BY ID */
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
 
   if (!validId) return res.status(400).send("The ID param is invalid");
@@ -35,7 +35,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /* CREATING A NEW USER */
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   /* Checking if the user is already in the DB */
   const emailExist = await User.findOne({
     email: req.body.email,
@@ -73,7 +73,7 @@ router.post("/", async (req, res) => {
 });
 
 /* UPDATING A USER */
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
   if (!validId) return res.status(400).send("The ID param is invalid");
 

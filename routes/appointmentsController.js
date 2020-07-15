@@ -1,3 +1,4 @@
+const auth = require("../middlewares/authMiddleware");
 const express = require("express");
 const { Types } = require("mongoose");
 const Appointment = require("../models/AppointmentModel");
@@ -10,7 +11,7 @@ const {
 const router = express.Router();
 
 /* GETTING LIST OF APPOINTMENTS */
-router.get("/", async (req, res) => {
+router.get("/", auth, async (req, res) => {
   const appointments = await Appointment.find()
     .populate("patient")
     .populate("doctor")
@@ -23,7 +24,7 @@ router.get("/", async (req, res) => {
 });
 
 /* GETTING AN APPOINTMENT BY ID */
-router.get("/:id", async (req, res) => {
+router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
 
   if (!validId) return res.status(400).send("The ID param is invalid");
@@ -42,7 +43,7 @@ router.get("/:id", async (req, res) => {
 });
 
 /* CREATING A NEW APPOINTMENT */
-router.post("/", async (req, res) => {
+router.post("/", auth, async (req, res) => {
   const validDoctorId = Types.ObjectId.isValid(req.body.doctor_id);
   if (!validDoctorId)
     return res.status(400).send("The doctor_id param is invalid");
@@ -79,7 +80,7 @@ router.post("/", async (req, res) => {
 });
 
 /* UPDATING AN APPOINTMENT */
-router.put("/:id", async (req, res) => {
+router.put("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
   if (!validId) return res.status(400).send("The ID param is invalid");
 
