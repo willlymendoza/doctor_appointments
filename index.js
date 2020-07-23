@@ -17,7 +17,7 @@ app.use("/api/users/", users);
 app.use("/api/appointments/", appointments);
 app.use("/api/auth/", auth);
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Listening on http://localhost:${port}`));
 
 mongoose
