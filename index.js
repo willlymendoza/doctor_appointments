@@ -10,9 +10,13 @@ const users = require("./routes/usersController");
 const appointments = require("./routes/appointmentsController");
 const auth = require("./routes/authController");
 
+const corsOptions = {
+  exposedHeaders: "Authorization",
+};
+
 dotenv.config();
 
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 app.use("/api/patients/", patients);
