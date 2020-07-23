@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const express = require("express");
+const cors = require("cors");
 const app = express();
 const dotenv = require("dotenv");
 
@@ -11,7 +12,9 @@ const auth = require("./routes/authController");
 
 dotenv.config();
 
+app.use(cors());
 app.use(express.json());
+
 app.use("/api/patients/", patients);
 app.use("/api/users/", users);
 app.use("/api/appointments/", appointments);
