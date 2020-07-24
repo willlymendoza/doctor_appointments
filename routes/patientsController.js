@@ -21,7 +21,7 @@ router.get("/", auth, async (req, res) => {
 /* LIST OF RECENT ADDED PATIENTS */
 router.get("/recent/:limit", auth, async (req, res) => {
   const recentPatients = await Patient.find()
-    .select("created_at")
+    .select("first_name last_name email created_at")
     .sort({ created_at: "desc" })
     .limit(parseInt(req.params.limit));
 
