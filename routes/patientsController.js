@@ -6,12 +6,15 @@ const {
   createValidation,
   updateValidation,
 } = require("../validations/patientValidations");
+const { populate } = require("../models/PatientModel");
 
 const router = express.Router();
 
 /* LIST OF PATIENTS */
 router.get("/", auth, async (req, res) => {
-  const users = await Patient.find();
+  const users = await Patient.find().select(
+    "first_name last_name personal_document_id phone_number email city address sex age"
+  );
   res.send(users);
 });
 
