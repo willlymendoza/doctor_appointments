@@ -12,10 +12,19 @@ const router = express.Router();
 
 /* LIST OF PATIENTS */
 router.get("/", auth, async (req, res) => {
-  const users = await Patient.find().select(
+  const patients = await Patient.find().select(
     "first_name last_name personal_document_id phone_number email city address sex age"
   );
-  res.send(users);
+  res.send(patients);
+});
+
+router.get("/recent/:limit", auth, async (req, res) => {
+  const recentPatients = await Patient.find()
+    .select("created_at")
+    .sort({ created_at: "desc" })
+    .limit(parseInt(req.params.limit));
+
+  res.send(recentPatients);
 });
 
 /* SEARCH PATIENT BY ID */
