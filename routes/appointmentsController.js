@@ -13,9 +13,9 @@ const router = express.Router();
 /* GETTING LIST OF APPOINTMENTS */
 router.get("/", auth, async (req, res) => {
   const appointments = await Appointment.find()
-    .populate("patient")
-    .populate("doctor")
-    .populate("created_by");
+    .select("appointment_date hour is_finished")
+    .populate({ path: "patient", select: "first_name last_name" })
+    .populate({ path: "doctor", select: "name last_name" });
 
   if (!appointments.length)
     return res.status(404).send("Appointments not found");
