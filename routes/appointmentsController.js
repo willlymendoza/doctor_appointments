@@ -23,6 +23,18 @@ router.get("/", auth, async (req, res) => {
   res.send(appointments);
 });
 
+/* LIST OF RECENT ADDED APPOINTMENTS */
+router.get("/recent/:limit", auth, async (req, res) => {
+  const recentAppointments = await Appointment.find()
+    .select("appointment_date hour")
+    .populate({ path: "patient", select: "first_name last_name" })
+    .populate({ path: "doctor", select: "name last_name" })
+    .sort({ created_at: "desc" })
+    .limit(parseInt(req.params.limit));
+
+  res.send(recentAppointments);
+});
+
 /* GETTING AN APPOINTMENT BY ID */
 router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
