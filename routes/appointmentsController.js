@@ -1,6 +1,7 @@
 const auth = require("../middlewares/authMiddleware");
 const express = require("express");
 const { Types } = require("mongoose");
+const moment = require("moment");
 const Appointment = require("../models/AppointmentModel");
 const Patient = require("../models/PatientModel");
 const User = require("../models/UserModel");
@@ -33,6 +34,21 @@ router.get("/recent/:limit", auth, async (req, res) => {
     .limit(parseInt(req.params.limit));
 
   res.send(recentAppointments);
+});
+
+router.get("/total", auth, async (req, res) => {
+  const total = await Appointment.countDocuments();
+
+  res.send({ total });
+});
+
+router.get("/today", auth, async (req, res) => {
+  const todayDate = moment().format("YYYY-MM-DD");
+  const total = await Appointment.find({
+    appointment_date: { $gte: todayDate, $lte: todayDate },
+  }).countDocuments();
+
+  res.send({ total });
 });
 
 /* GETTING AN APPOINTMENT BY ID */
@@ -78,7 +94,7 @@ router.post("/", auth, async (req, res) => {
     hour: req.body.hour,
     patient: req.body.patient_id,
     doctor: req.body.doctor_id,
-    created_by: "5f0667fb5aa2b45df4dfaeca",
+    created_by: req.body.created_by_id,
     is_finished: false,
     updated_at: Date.now(),
   });
