@@ -51,6 +51,11 @@ router.post("/", auth, async (req, res) => {
   const { error } = createValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
+  const emailExist = await Patient.findOne({
+    email: req.body.email,
+  });
+  if (emailExist) return res.status(400).send("Email already exists");
+
   const patient = new Patient({
     first_name: req.body.first_name,
     last_name: req.body.last_name,
