@@ -28,6 +28,12 @@ router.get("/recent/:limit", auth, async (req, res) => {
   res.send(recentPatients);
 });
 
+router.get("/total", auth, async (req, res) => {
+  const total = await Patient.countDocuments();
+
+  res.send({ total });
+});
+
 /* SEARCH PATIENT BY ID */
 router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
