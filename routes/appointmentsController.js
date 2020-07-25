@@ -94,6 +94,7 @@ router.post("/", auth, async (req, res) => {
     hour: req.body.hour,
     patient: req.body.patient_id,
     doctor: req.body.doctor_id,
+    observations: req.body.observations,
     created_by: req.body.created_by_id,
     is_finished: false,
     updated_at: Date.now(),
