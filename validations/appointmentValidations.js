@@ -5,8 +5,8 @@ const createValidation = (data) => {
   const schema = Joi.object({
     appointment_date: Joi.date().iso().required(),
     hour: Joi.string().min(4).max(10).required(),
-    observations: Joi.string().max(250),
-    prescription: Joi.string().max(250),
+    observations: Joi.string().max(250).allow(""),
+    prescription: Joi.string().max(250).allow(""),
     patient_id: Joi.string().required(),
     doctor_id: Joi.string().required(),
     created_by_id: Joi.string().required(),
@@ -20,8 +20,8 @@ const updateValidation = (data) => {
   const schema = Joi.object({
     appointment_date: Joi.date().iso().required(),
     hour: Joi.string().min(4).max(10).required(),
-    observations: Joi.string().max(250),
-    prescription: Joi.string().max(250),
+    observations: Joi.string().max(250).allow(""),
+    prescription: Joi.string().max(250).allow(""),
     patient_id: Joi.string().required(),
     doctor_id: Joi.string().required(),
     is_finished: Joi.boolean().required(),
