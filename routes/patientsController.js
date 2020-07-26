@@ -39,7 +39,9 @@ router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
   if (!validId) return res.status(400).send("The ID param is invalid");
 
-  const patient = await Patient.findById(req.params.id);
+  const patient = await Patient.findById(req.params.id).select(
+    "first_name last_name personal_document_id phone_number email city address sex age"
+  );
 
   if (!patient) return res.status(404).send("Patient not found");
 
