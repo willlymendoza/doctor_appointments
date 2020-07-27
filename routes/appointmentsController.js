@@ -14,8 +14,11 @@ const router = express.Router();
 /* GETTING LIST OF APPOINTMENTS */
 router.get("/", auth, async (req, res) => {
   const appointments = await Appointment.find()
-    .select("appointment_date hour is_finished")
-    .populate({ path: "patient", select: "first_name last_name" })
+    .select("appointment_date hour is_finished patient_id doctor_id")
+    .populate({
+      path: "patient",
+      select: "first_name last_name",
+    })
     .populate({ path: "doctor", select: "name last_name" });
 
   if (!appointments.length)
@@ -27,7 +30,7 @@ router.get("/", auth, async (req, res) => {
 /* LIST OF RECENT ADDED APPOINTMENTS */
 router.get("/recent/:limit", auth, async (req, res) => {
   const recentAppointments = await Appointment.find()
-    .select("appointment_date hour")
+    .select("appointment_date hour patient_id doctor_id")
     .populate({ path: "patient", select: "first_name last_name" })
     .populate({ path: "doctor", select: "name last_name" })
     .sort({ created_at: "desc" })
