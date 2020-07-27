@@ -60,7 +60,7 @@ router.post("/", auth, async (req, res) => {
     address: data.address,
     is_doctor: data.is_doctor,
     password: hashPassword,
-    created_by: "5f0667fb5aa2b45df4dfaeca",
+    created_by: req.user._id,
     updated_at: Date.now(),
   });
 
