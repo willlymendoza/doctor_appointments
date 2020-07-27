@@ -9,7 +9,6 @@ const createValidation = (data) => {
     prescription: Joi.string().max(250).allow(""),
     patient_id: Joi.string().required(),
     doctor_id: Joi.string().required(),
-    created_by_id: Joi.string().required(),
   });
 
   return schema.validate(data);
