@@ -22,20 +22,17 @@ const appointmentSchema = new Schema({
     maxlength: 250,
     default: "",
   },
-  patient: {
+  patient_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "patient",
   },
-  doctor: {
+  doctor_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "user",
   },
-  created_by: {
+  created_by_id: {
     type: Schema.Types.ObjectId,
     required: true,
-    ref: "user",
   },
   is_finished: {
     type: Boolean,
@@ -50,6 +47,23 @@ const appointmentSchema = new Schema({
     type: Date,
   },
 });
+
+appointmentSchema.virtual("patient", {
+  ref: "patient",
+  localField: "patient_id",
+  foreignField: "_id",
+  justOne: true,
+});
+
+appointmentSchema.virtual("doctor", {
+  ref: "user",
+  localField: "doctor_id",
+  foreignField: "_id",
+  justOne: true,
+});
+
+appointmentSchema.set("toObject", { virtuals: true });
+appointmentSchema.set("toJSON", { virtuals: true });
 
 const Appointment = mongoose.model("appointment", appointmentSchema);
 
