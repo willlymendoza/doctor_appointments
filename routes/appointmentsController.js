@@ -1,7 +1,11 @@
 const auth = require("../middlewares/authMiddleware");
 const express = require("express");
 const { Types } = require("mongoose");
-const { postDateFormat, ymdDateFormat } = require("../helpers/dateFormat");
+const {
+  postDateFormat,
+  ymdDateFromFormat,
+  ymdDateToFormat,
+} = require("../helpers/dateFormat");
 const Appointment = require("../models/AppointmentModel");
 const Patient = require("../models/PatientModel");
 const User = require("../models/UserModel");
@@ -46,9 +50,11 @@ router.get("/total", auth, async (req, res) => {
 });
 
 router.get("/today", auth, async (req, res) => {
-  const todayDate = ymdDateFormat();
+  const dateFrom = ymdDateFromFormat();
+  const dateTo = ymdDateToFormat();
+
   const total = await Appointment.find({
-    appointment_date: { $gte: todayDate, $lte: todayDate },
+    appointment_date: { $gte: dateFrom, $lte: dateTo },
   }).countDocuments();
 
   res.send({ total });
