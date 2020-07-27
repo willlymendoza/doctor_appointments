@@ -101,7 +101,7 @@ router.post("/", auth, async (req, res) => {
     patient_id: req.body.patient_id,
     doctor_id: req.body.doctor_id,
     observations: req.body.observations,
-    created_by_id: req.body.created_by_id,
+    created_by_id: req.user._id,
     is_finished: false,
   });
 
