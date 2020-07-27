@@ -68,8 +68,7 @@ router.post("/", auth, async (req, res) => {
     address: req.body.address,
     sex: req.body.sex,
     age: req.body.age,
-    /* CHANGE THIS WHEN APLIYING USERS AUTH */
-    created_by_id: "5f0149db7c41292dec984f82",
+    created_by_id: req.user._id,
     updated_at: Date.now(),
   });
 
