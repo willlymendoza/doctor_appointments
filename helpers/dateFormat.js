@@ -1,10 +1,10 @@
 const moment = require("moment");
 
-const postDateFormat = (date = "") => {
+const postDateFormat = (date) => {
   return moment(date).format();
 };
 
-const ymdDateFormat = (date = "") => {
+const ymdDateFormat = (date) => {
   return moment(date).format("yyyy-MM-DD");
 };
 
