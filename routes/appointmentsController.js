@@ -130,7 +130,7 @@ router.put("/:id", auth, async (req, res) => {
       observations: data.observations,
       prescription: data.prescription,
       is_finished: false,
-      updated_at: postDateFormat(),
+      updated_at: Date.now(),
     },
     {
       new: true,
