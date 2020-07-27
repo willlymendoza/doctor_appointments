@@ -58,9 +58,15 @@ router.get("/:id", auth, async (req, res) => {
   if (!validId) return res.status(400).send("The ID param is invalid");
 
   const appointment = await await Appointment.findById(req.params.id)
-    .populate("patient")
-    .populate("doctor")
-    .populate("created_by");
+    .select(
+      "appointment_date hour observations prescription is_finished patient_id doctor_id"
+    )
+    .populate({
+      path: "patient",
+      select:
+        "first_name last_name personal_document_id phone_number email city address sex age",
+    })
+    .populate({ path: "doctor", select: "name last_name" });
 
   if (!appointment) {
     res.status(404).send("Appointment not found");
