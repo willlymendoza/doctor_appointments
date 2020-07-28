@@ -66,7 +66,7 @@ router.get("/:id", auth, async (req, res) => {
 
   if (!validId) return res.status(400).send("The ID param is invalid");
 
-  const appointment = await await Appointment.findById(req.params.id)
+  const appointment = await Appointment.findById(req.params.id)
     .select(
       "appointment_date hour observations prescription is_finished patient_id doctor_id"
     )
@@ -138,6 +138,8 @@ router.put("/:id", auth, async (req, res) => {
       hour: data.hour,
       observations: data.observations,
       prescription: data.prescription,
+      patient_id: data.patient_id,
+      doctor_id: data.doctor_id,
       is_finished: false,
       updated_at: Date.now(),
     },
