@@ -60,6 +60,14 @@ router.get("/today", auth, async (req, res) => {
   res.send({ total });
 });
 
+router.get("/patient/:id", auth, async (req, res) => {
+  const appointments = await Appointment.find({
+    patient_id: req.params.id,
+  }).select("appointment_date hour");
+
+  res.send(appointments);
+});
+
 /* GETTING AN APPOINTMENT BY ID */
 router.get("/:id", auth, async (req, res) => {
   const validId = Types.ObjectId.isValid(req.params.id);
