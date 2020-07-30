@@ -111,7 +111,7 @@ router.post("/", auth, async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const appointment = new Appointment({
-    appointment_date: ymdDateFromFormat("2020-07-29"),
+    appointment_date: ymdDateFromFormat(req.body.appointment_date),
     hour: req.body.hour,
     patient_id: req.body.patient_id,
     doctor_id: req.body.doctor_id,
