@@ -15,9 +15,6 @@ const {
 } = require("../validations/appointmentValidations");
 const router = express.Router();
 
-const moment = require("moment");
-const { ISO_8601, locale } = require("moment");
-
 /* GETTING LIST OF APPOINTMENTS */
 router.get("/", auth, async (req, res) => {
   const appointments = await Appointment.find()
