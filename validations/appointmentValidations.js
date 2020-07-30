@@ -23,7 +23,7 @@ const updateValidation = (data) => {
     prescription: Joi.string().max(250).allow(""),
     patient_id: Joi.string().required(),
     doctor_id: Joi.string().required(),
-    is_finished: Joi.boolean().required(),
+    is_finished: Joi.boolean(),
   });
 
   return schema.validate(data);
