@@ -6,16 +6,30 @@ const {
   createValidation,
   updateValidation,
 } = require("../validations/patientValidations");
-const { populate } = require("../models/PatientModel");
 
 const router = express.Router();
 
 /* LIST OF PATIENTS */
 router.get("/", auth, async (req, res) => {
-  const patients = await Patient.find().select(
-    "first_name last_name personal_document_id phone_number email city address sex age"
-  );
-  res.send(patients);
+  if (req.query.pageNumber && req.query.pageSize) {
+    const pageNumber = parseInt(req.query.pageNumber);
+    const pageSize = parseInt(req.query.pageSize);
+
+    const count = await Patient.estimatedDocumentCount();
+
+    const patients = await Patient.find()
+      .select(
+        "first_name last_name personal_document_id phone_number email city address sex age"
+      )
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
+    res.send({ patients, count });
+  } else {
+    const patients = await Patient.find().select(
+      "first_name last_name personal_document_id phone_number email city address sex age"
+    );
+    res.send(patients);
+  }
 });
 
 /* LIST OF RECENT ADDED PATIENTS */
@@ -87,6 +101,11 @@ router.put("/:id", auth, async (req, res) => {
 
   const { error } = updateValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
+
+  /* const emailExist = await Patient.findOne({
+    email: req.body.email,
+  });
+  if (emailExist) return res.status(400).send("Email already exists"); */
 
   const patient = await Patient.findByIdAndUpdate(
     req.params.id,
