@@ -1,7 +1,11 @@
 const auth = require("../middlewares/authMiddleware");
 const express = require("express");
 const { Types } = require("mongoose");
-const { ymdDateFromFormat, ymdDateToFormat } = require("../helpers/dateFormat");
+const {
+  ymdDateFromFormat,
+  ymdDateToFormat,
+  postDateFormat,
+} = require("../helpers/dateFormat");
 const Appointment = require("../models/AppointmentModel");
 const Patient = require("../models/PatientModel");
 const User = require("../models/UserModel");
@@ -12,6 +16,7 @@ const {
 const router = express.Router();
 
 const moment = require("moment");
+const { ISO_8601, locale } = require("moment");
 
 /* GETTING LIST OF APPOINTMENTS */
 router.get("/", auth, async (req, res) => {
@@ -111,7 +116,7 @@ router.post("/", auth, async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   const appointment = new Appointment({
-    appointment_date: ymdDateFromFormat(req.body.appointment_date),
+    appointment_date: postDateFormat(req.body.appointment_date),
     hour: req.body.hour,
     patient_id: req.body.patient_id,
     doctor_id: req.body.doctor_id,
@@ -140,7 +145,7 @@ router.put("/:id", auth, async (req, res) => {
   const appointment = await Appointment.findByIdAndUpdate(
     req.params.id,
     {
-      appointment_date: ymdDateFromFormat(data.appointment_date),
+      appointment_date: postDateFormat(data.appointment_date),
       hour: data.hour,
       observations: data.observations,
       prescription: data.prescription,
