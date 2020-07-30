@@ -28,7 +28,7 @@ const patientSchema = new Schema({
   email: {
     type: String,
     minlength: 8,
-    maxlength: 25,
+    maxlength: 50,
   },
   city: {
     type: String,
