@@ -17,18 +17,39 @@ const router = express.Router();
 
 /* GETTING LIST OF APPOINTMENTS */
 router.get("/", auth, async (req, res) => {
-  const appointments = await Appointment.find()
-    .select("appointment_date hour is_finished patient_id doctor_id")
-    .populate({
-      path: "patient",
-      select: "first_name last_name",
-    })
-    .populate({ path: "doctor", select: "name last_name" });
+  if (req.query.pageNumber && req.query.pageSize) {
+    const pageNumber = parseInt(req.query.pageNumber);
+    const pageSize = parseInt(req.query.pageSize);
 
-  if (!appointments.length)
-    return res.status(404).send("Appointments not found");
+    const count = await Patient.estimatedDocumentCount();
+    const appointments = await Appointment.find()
+      .select("appointment_date hour is_finished patient_id doctor_id")
+      .populate({
+        path: "patient",
+        select: "first_name last_name",
+      })
+      .populate({ path: "doctor", select: "name last_name" })
+      .skip((pageNumber - 1) * pageSize)
+      .limit(pageSize);
 
-  res.send(appointments);
+    if (!appointments.length)
+      return res.status(404).send("Appointments not found");
+
+    res.send({ appointments, count });
+  } else {
+    const appointments = await Appointment.find()
+      .select("appointment_date hour is_finished patient_id doctor_id")
+      .populate({
+        path: "patient",
+        select: "first_name last_name",
+      })
+      .populate({ path: "doctor", select: "name last_name" });
+
+    if (!appointments.length)
+      return res.status(404).send("Appointments not found");
+
+    res.send(appointments);
+  }
 });
 
 /* LIST OF RECENT ADDED APPOINTMENTS */
