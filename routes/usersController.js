@@ -11,11 +11,19 @@ const router = express.Router();
 
 /* GETTING LIST OF USERS */
 router.get("/", auth, async (req, res) => {
-  const users = await User.find().populate("created_by");
+  if (req.query.isDoctor && parseInt(req.query.isDoctor) === 1) {
+    const users = await User.find({ is_doctor: true }).select("name last_name");
 
-  if (!users.length) return res.status(404).send("Users not found");
+    if (!users.length) return res.status(404).send("Users not found");
 
-  res.send(users);
+    res.send(users);
+  } else {
+    const users = await User.find().populate("created_by");
+
+    if (!users.length) return res.status(404).send("Users not found");
+
+    res.send(users);
+  }
 });
 
 /* GETTING A USER BY ID */
