@@ -102,10 +102,11 @@ router.put("/:id", auth, async (req, res) => {
   const { error } = updateValidation(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  /* const emailExist = await Patient.findOne({
+  const emailExist = await Patient.find({
+    _id: { $ne: req.params.id },
     email: req.body.email,
   });
-  if (emailExist) return res.status(400).send("Email already exists"); */
+  if (emailExist.length) return res.status(400).send("Email already exists");
 
   const patient = await Patient.findByIdAndUpdate(
     req.params.id,
