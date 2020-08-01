@@ -21,7 +21,7 @@ router.get("/", auth, async (req, res) => {
     const pageNumber = parseInt(req.query.pageNumber);
     const pageSize = parseInt(req.query.pageSize);
 
-    const count = await Patient.estimatedDocumentCount();
+    const count = await Appointment.estimatedDocumentCount();
     const appointments = await Appointment.find()
       .select("appointment_date hour is_finished patient_id doctor_id")
       .populate({
