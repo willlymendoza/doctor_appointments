@@ -4,7 +4,7 @@
   "description": "Doctor Appointments",
   "main": "./src/api.js",
   "scripts": {
-    "build": "netlify-lambda build express",
+    "build": "netlify-lambda build src",
     "start": "nodemon ./src/api.js"
   },
   "author": "Willian Mendoza",
