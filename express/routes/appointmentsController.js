@@ -33,9 +33,6 @@ router.get("/", auth, async (req, res) => {
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 
-    if (!appointments.length)
-      return res.status(404).send("Appointments not found");
-
     res.send({ appointments, count });
   } else {
     const appointments = await Appointment.find()
@@ -46,9 +43,6 @@ router.get("/", auth, async (req, res) => {
       })
       .populate({ path: "doctor", select: "name last_name" })
       .sort({ appointment_date: "desc" });
-
-    if (!appointments.length)
-      return res.status(404).send("Appointments not found");
 
     res.send(appointments);
   }
@@ -107,11 +101,6 @@ router.get("/:id", auth, async (req, res) => {
         "first_name last_name personal_document_id phone_number email city address sex age",
     })
     .populate({ path: "doctor", select: "name last_name" });
-
-  if (!appointment) {
-    res.status(404).send("Appointment not found");
-    return;
-  }
 
   res.send(appointment);
 });
