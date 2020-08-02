@@ -29,6 +29,7 @@ router.get("/", auth, async (req, res) => {
         select: "first_name last_name",
       })
       .populate({ path: "doctor", select: "name last_name" })
+      .sort({ appointment_date: "desc" })
       .skip((pageNumber - 1) * pageSize)
       .limit(pageSize);
 
@@ -43,7 +44,8 @@ router.get("/", auth, async (req, res) => {
         path: "patient",
         select: "first_name last_name",
       })
-      .populate({ path: "doctor", select: "name last_name" });
+      .populate({ path: "doctor", select: "name last_name" })
+      .sort({ appointment_date: "desc" });
 
     if (!appointments.length)
       return res.status(404).send("Appointments not found");
