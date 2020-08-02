@@ -38,5 +38,6 @@ mongoose
   .then(() => console.log("Connected to mongodb"))
   .catch((err) => console.log(`Can't connect to mongo db`));
 
+//
 module.exports = app;
 module.exports.handler = serverless(app);
