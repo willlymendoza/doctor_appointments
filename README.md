@@ -12,7 +12,7 @@
 
 > MONGODB
 
-## This app was configured in order to be deployed in [netlify](netlifly) using netlify lambda functions.
+## This app was configured in order to be deployed in [netlify](https://www.netlify.com/) using netlify lambda functions.
 
 # SCRIPTS
 
