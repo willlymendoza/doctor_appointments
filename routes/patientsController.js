@@ -22,12 +22,15 @@ router.get("/", auth, async (req, res) => {
         "first_name last_name personal_document_id phone_number email city address sex age"
       )
       .skip((pageNumber - 1) * pageSize)
-      .limit(pageSize);
+      .limit(pageSize)
+      .sort({ created_at: "desc" });
     res.send({ patients, count });
   } else {
-    const patients = await Patient.find().select(
-      "first_name last_name personal_document_id phone_number email city address sex age"
-    );
+    const patients = await Patient.find()
+      .select(
+        "first_name last_name personal_document_id phone_number email city address sex age"
+      )
+      .sort({ created_at: "desc" });
     res.send(patients);
   }
 });
